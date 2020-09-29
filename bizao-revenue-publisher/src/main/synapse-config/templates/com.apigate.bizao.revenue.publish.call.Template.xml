@@ -1,4 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template name="com.apigate.bizao.revenue.publish.call.Template" xmlns="http://ws.apache.org/ns/synapse">
-    <sequence/>
+    <sequence>
+
+        <log level="custom">
+            <property name="DIRECTION" value="REQUEST-IN"/>
+            <property name="APP" value="REVENUE-CALL"/>
+            <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
+            <property name="ORDER_ID" expression="$ctx:ORDER_ID"/>
+        </log>
+
+        <payloadFactory media-type="json">
+            <format>
+                {
+                "type":"$",
+                "county_code": "$1",
+                "mno_name": "$2",
+                "status": "$3"
+                "amount": "$4",
+                "order-id": "$5",
+                "currency": "$6",
+                "reference": "$7",
+                "date": "$8",
+                "state": "$9",
+                "country-code": "$10",
+                "intTransaction-id": "$11",
+                "extTransaction-id ": "$12",
+                "channel": "$13",
+                "service_provider": "$14"
+                }
+            </format>
+            <args>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+                <arg evaluator="xml" expression="$ctx:"/>
+            </args>
+        </payloadFactory>
+
+        <!-- Call revenue publish endpoint-->
+        <header name="To" expression="$ctx:revenuePublish" scope="default"/>
+        <property action="remove" name="REST_URL_POSTFIX" scope="axis2"/>
+
+        <call>
+            <endpoint key="RevenuePublishEndpoint"/>
+        </call>
+
+        <log level="custom">
+            <property name="DIRECTION" value="RESPONSE-IN"/>
+            <property name="APP" value="REVENUE-CALL"/>
+            <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
+            <property expression="$axis2:HTTP_SC" name="HTTP_STATUS"/>
+        </log>
+
+    </sequence>
 </template>
