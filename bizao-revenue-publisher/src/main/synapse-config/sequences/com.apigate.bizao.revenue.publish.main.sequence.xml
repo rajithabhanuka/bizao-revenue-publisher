@@ -7,9 +7,9 @@
         <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
         <property name="COUNTRY_CODE" expression="json-eval($.county_code)" type="STRING" scope="default"/>
         <property name="MNO_NAME" expression="json-eval($.mno_name)" type="STRING" scope="default"/>
-        <property name="ORDER_ID" expression="json-eval($.order-id)" type="STRING" scope="default"/>
+        <property name="ORDER_ID" expression="json-eval($.order_id)" type="STRING" scope="default"/>
         <property name="AMOUNT" expression="json-eval($.amount)" type="STRING" scope="default"/>
-        <property name="PAYMENT_STATUS" expression="json-eval($.order-id)" type="STRING" scope="default"/>
+        <property name="PAYMENT_STATUS" expression="json-eval($.status)" type="STRING" scope="default"/>
     </log>
 
     <payloadFactory media-type="json">
@@ -26,7 +26,7 @@
         <property name="DIRECTION" value="RESPONSE-OUT"/>
         <property name="APP" value="REVENUE-PUBLISH"/>
         <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
-        <property name="ORDER_ID" expression="json-eval($.order-id)" type="STRING" scope="default"/>
+        <property name="ORDER_ID" expression="json-eval($.order_id)" type="STRING" scope="default"/>
     </log>
 
     <respond/>

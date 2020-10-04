@@ -21,7 +21,7 @@
                 "mno_name": "$3",
                 "status": "$4",
                 "amount": "$5",
-                "order-id": "$6",
+                "order_id": "$6",
                 "currency": "$7",
                 "reference": "$8",
                 "date": "$9",
