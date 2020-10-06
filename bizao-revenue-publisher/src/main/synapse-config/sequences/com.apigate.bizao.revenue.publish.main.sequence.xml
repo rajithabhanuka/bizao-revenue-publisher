@@ -26,7 +26,6 @@
         <property name="DIRECTION" value="RESPONSE-OUT"/>
         <property name="APP" value="REVENUE-PUBLISH"/>
         <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
-        <property name="ORDER_ID" expression="json-eval($.order_id)" type="STRING" scope="default"/>
     </log>
 
     <respond/>
