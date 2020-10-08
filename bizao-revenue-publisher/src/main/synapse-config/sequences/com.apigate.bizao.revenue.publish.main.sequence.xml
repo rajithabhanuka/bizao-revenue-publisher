@@ -1,2 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sequence name="com.apigate.bizao.revenue.publish.main.sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse"/>
+<sequence name="com.apigate.bizao.revenue.publish.main.sequence" trace="disable" xmlns="http://ws.apache.org/ns/synapse">
+
+    <log level="custom">
+        <property name="DIRECTION" value="REQUEST-IN"/>
+        <property name="APP" value="REVENUE-PUBLISH"/>
+        <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
+        <property name="COUNTRY_CODE" expression="json-eval($.county_code)" type="STRING" scope="default"/>
+        <property name="MNO_NAME" expression="json-eval($.mno_name)" type="STRING" scope="default"/>
+        <property name="ORDER_ID" expression="json-eval($.order_id)" type="STRING" scope="default"/>
+        <property name="AMOUNT" expression="json-eval($.amount)" type="STRING" scope="default"/>
+        <property name="PAYMENT_STATUS" expression="json-eval($.status)" type="STRING" scope="default"/>
+    </log>
+
+    <payloadFactory media-type="json">
+    <format>
+        {
+        "status":"published"
+        }
+    </format>
+    </payloadFactory>
+
+    <property name="HTTP_SC" value="201" scope="axis2" type="STRING"/>
+
+    <log level="custom">
+        <property name="DIRECTION" value="RESPONSE-OUT"/>
+        <property name="APP" value="REVENUE-PUBLISH"/>
+        <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
+    </log>
+
+    <respond/>
+
+</sequence>

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <api context="/revenue" name="DataPublishAPI" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="GET">
-        <inSequence/>
+    <resource methods="POST" uri-template="/publish">
+        <inSequence>
+            <sequence key="com.apigate.bizao.revenue.publish.main.sequence"/>
+        </inSequence>
         <outSequence/>
         <faultSequence/>
     </resource>
