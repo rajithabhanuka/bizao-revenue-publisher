@@ -66,7 +66,7 @@
         </dblookup>
 
         <!-- Call revenue publish endpoint-->
-        <property name="Authorization" expression="fn:concat('Basic ', $ctx:REVENUE_PUBLISH_API_BEARER_TOKEN)" scope="transport" type="STRING"/>
+        <property name="Authorization" expression="fn:concat('Bearer ', $ctx:REVENUE_PUBLISH_API_BEARER_TOKEN)" scope="transport" type="STRING"/>
         <property name="Content-Type" value="application/json" scope="transport" type="STRING"/>
         <header name="To" expression="$ctx:REVENUE_PUBLISH_API_URL" scope="default"/>
         <property action="remove" name="REST_URL_POSTFIX" scope="axis2"/>
