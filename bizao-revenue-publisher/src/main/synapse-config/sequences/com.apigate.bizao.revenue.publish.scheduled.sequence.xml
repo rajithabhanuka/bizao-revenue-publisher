@@ -6,6 +6,28 @@
         <property name="Inside" value="--------revenue-publish-scheduled-sequence---------"/>
     </log>
 
+    <dblookup>
+        <connection>
+            <pool>
+                <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql><![CDATA[ SELECT  fr.amount, fr.currency_code, fr.reference,
+                        fr.transaction_timestamp, fr.state, fr.id, fr.operator_transaction_id, pt.channel, fr.service_provider
+                        FROM  data_publish_request fr  ]]></sql>
+            <result column="amount" name="AMOUNT"/>
+            <result column="currency_code" name="CURRENCY"/>
+            <result column="reference" name="REFERENCE"/>
+            <result column="transaction_timestamp" name="DATE"/>
+            <result column="state" name="STATE"/>
+            <result column="id" name="INTERNAL_TRANSACTION_ID"/>
+            <result column="operator_transaction_id" name="OPERATOR_TRANSACTION_ID"/>
+            <result column="channel" name="CHANNEL"/>
+            <result column="hub_service_provider_id" name="SERVICE_PROVIDER"/>
+        </statement>
+    </dblookup>
+
     <payloadFactory media-type="json">
         <format>
             {
