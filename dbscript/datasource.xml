@@ -1,0 +1,20 @@
+<datasource>
+    <name>REVENUE_PUBLISHER_DB</name>
+    <description>The datasource used for revenue publisher related information</description>
+    <jndiConfig>
+        <name>jdbc/REVENUE_PUBLISHER_DB</name>
+    </jndiConfig>
+    <definition type="RDBMS">
+        <configuration>
+            <url>jdbc:mysql://localhost:3306/revenue_publisher_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
+            <username>root</username>
+            <password>root</password>
+            <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+            <maxActive>50</maxActive>
+            <maxWait>60000</maxWait>
+            <testOnBorrow>true</testOnBorrow>
+            <validationQuery>SELECT 1</validationQuery>
+            <validationInterval>30000</validationInterval>
+        </configuration>
+    </definition>
+</datasource>
