@@ -7,109 +7,146 @@
     </log>
 
     <!--Get revenue publish URL-->
-    <dblookup>
-        <connection>
-            <pool>
-                <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
-            </pool>
-        </connection>
-        <statement>
-            <sql>
-                <![CDATA[ SELECT revenue_publish_api_url, revenue_publish_api_bearer_token, batch_size, delay_interval FROM global_settings WHERE id = 1 ]]></sql>
-            <result column="revenue_publish_api_url" name="REVENUE_PUBLISH_API_URL"/>
-            <result column="revenue_publish_api_bearer_token" name="REVENUE_PUBLISH_API_BEARER_TOKEN"/>
-            <result column="batch_size" name="BATCH_SIZE"/>
-            <result column="delay_interval" name="DELAY_INTERVAL"/>
-        </statement>
-    </dblookup>
 
-    <dblookup>
-        <connection>
-            <pool>
-                <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
-            </pool>
-        </connection>
-        <statement>
-            <sql><![CDATA[ SELECT dpr.amount, dpr.currency, dpr.reference,
-                        dpr.date, dpr.state, dpr.internal_transaction_id,
-                        dpr.operator_transaction_id, dpr.channel, dpr.service_provider,
-                        dpr.type, dpr.country, dpr.mno,
-                        dpr.payment_status, dpr.order_id, dpr.publish_status
-                        FROM  data_publish_request dpr
-                        WHERE scheduled_time <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)
-                        AND publish_status = 0 ]]></sql>
-            <result column="amount" name="AMOUNT"/>
-            <result column="currency" name="CURRENCY"/>
-            <result column="reference" name="REFERENCE"/>
-            <result column="date" name="DATE"/>
-            <result column="state" name="STATE"/>
-            <result column="internal_transaction_id" name="INTERNAL_TRANSACTION_ID"/>
-            <result column="operator_transaction_id" name="OPERATOR_TRANSACTION_ID"/>
-            <result column="channel" name="CHANNEL"/>
-            <result column="service_provider" name="SERVICE_PROVIDER"/>
-            <result column="type" name="TYPE"/>
-            <result column="country" name="COUNTRY"/>
-            <result column="mno" name="MNO"/>
-            <result column="payment_status" name="PAYMENT_STATUS"/>
-            <result column="order_id" name="ORDER_ID"/>
-            <result column="publish_status" name="PUBLISH_STATUS"/>
-        </statement>
-    </dblookup>
+    <class name="com.apigate.bizao.mobilemoneyapi.CacheableJDBCLookupMediator">
+        <axis2ns1:property
+                name="sqlQuery"
+                value="SELECT
+                revenue_publish_api_url:REVENUE_PUBLISH_API_URL,
+                revenue_publish_api_bearer_token:REVENUE_PUBLISH_API_BEARER_TOKEN,
+                batch_size:BATCH_SIZE,
+                delay_interval:DELAY_INTERVAL
+                FROM global_settings
+                WHERE id = 1 "
+                xmlns:axis2ns1="http://ws.apache.org/ns/synapse"/>
+        <axis2ns2:property name="cacheExpiresIn" value="360m" xmlns:axis2ns2="http://ws.apache.org/ns/synapse"/>
+        <axis2ns3:property name="dataSource" value="jdbc/REVENUE_PUBLISHER_DB"
+                           xmlns:axis2ns3="http://ws.apache.org/ns/synapse"/>
+    </class>
 
-    <payloadFactory media-type="json">
-        <format>
-            {
-            "type": "$1",
-            "county_code": "$2",
-            "mno_name": "$3",
-            "status": "$4",
-            "amount": "$5",
-            "order_id": "$6",
-            "currency": "$7",
-            "reference": "$8",
-            "date": "$9",
-            "state": "$10",
-            "intTransaction-id": "$11",
-            "extTransaction-id ": "$12",
-            "channel": "$13",
-            "service_provider": "$14"
-            }
-        </format>
-        <args>
-            <arg evaluator="xml" expression="$ctx:TYPE"/>
-            <arg evaluator="xml" expression="$ctx:COUNTRY"/>
-            <arg evaluator="xml" expression="$ctx:MNO"/>
-            <arg evaluator="xml" expression="$ctx:PAYMENT_STATUS"/>
-            <arg evaluator="xml" expression="$ctx:AMOUNT"/>
-            <arg evaluator="xml" expression="$ctx:ORDER_ID"/>
-            <arg evaluator="xml" expression="$ctx:CURRENCY"/>
-            <arg evaluator="xml" expression="$ctx:REFERENCE"/>
-            <arg evaluator="xml" expression="$ctx:DATE"/>
-            <arg evaluator="xml" expression="$ctx:STATE"/>
-            <arg evaluator="xml" expression="$ctx:INTERNAL_TRANSACTION_ID"/>
-            <arg evaluator="xml" expression="$ctx:OPERATOR_TRANSACTION_ID"/>
-            <arg evaluator="xml" expression="$ctx:CHANNEL"/>
-            <arg evaluator="xml" expression="$ctx:SERVICE_PROVIDER"/>
-        </args>
-    </payloadFactory>
+    <property name="sql_1" scope="default" type="STRING" value="SELECT
+                        amount, currency, reference,
+                        date, state, internal_transaction_id,
+                        operator_transaction_id, channel, service_provider,
+                        type, country, mno,
+                        payment_status, order_id, publish_status, id
+                        FROM  data_publish_request
+                        WHERE publish_status = 0 AND
+                        scheduled_time &lt;= DATE_SUB(NOW(), INTERVAL
+                        "/>
+    <property name="sql_2" scope="default" type="STRING" value=" 5"/>
+    <property name="sql_3" scope="default" type="STRING" value=" MINUTE)"/>
 
-    <!-- Call revenue publish endpoint-->
-    <property name="Authorization" expression="fn:concat('Bearer ', $ctx:REVENUE_PUBLISH_API_BEARER_TOKEN)"
-              scope="transport" type="STRING"/>
-    <property name="Content-Type" value="application/json" scope="transport" type="STRING"/>
-    <header name="To" expression="$ctx:REVENUE_PUBLISH_API_URL" scope="default"/>
-    <property action="remove" name="REST_URL_POSTFIX" scope="axis2"/>
-    <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+    <property name="SELECT_QUERY"
+              expression="fn:concat($ctx:sql_1, $ctx:sql_2 , $ctx:sql_3)"
+              scope="default" type="STRING"/>
 
-    <call>
-        <endpoint key="RevenuePublishEndpoint"/>
-    </call>
+    <class name="com.apigate.bizao.mobilemoneyapi.MultipleRowJDBCLookupMediator">
+        <axis2ns2:property name="dataSource" value="jdbc/REVENUE_PUBLISHER_DB"
+                           xmlns:axis2ns2="http://ws.apache.org/ns/synapse"/>
+    </class>
 
     <log level="custom">
-        <property name="DIRECTION" value="RESPONSE-IN"/>
-        <property name="APP" value="REVENUE-CALL"/>
-        <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
-        <property expression="$axis2:HTTP_SC" name="HTTP_STATUS"/>
+<!--        <property name="SELECT_QUERY" expression="$ctx:SELECT_QUERY"/>-->
+        <property name="REVENUE_PUBLISHER_RESULT_COUNT" expression="count(//RESULT_ARRAY)"/>
     </log>
 
+    <iterate xmlns:ns="http://org.apache.synapse/xsd"
+             expression="//RESULT_ARRAY" sequential="false">
+        <target>
+            <sequence>
+                <property name="AMOUNT" expression="//RESULT_ARRAY/amount/text()" scope="default" type="STRING"/>
+                <property name="CURRENCY" expression="//RESULT_ARRAY/currency/text()" scope="default" type="STRING"/>
+                <property name="REFERENCE" expression="//RESULT_ARRAY/reference/text()" scope="default" type="STRING"/>
+                <property name="DATE" expression="//RESULT_ARRAY/date/text()" scope="default" type="STRING"/>
+                <property name="STATE" expression="//RESULT_ARRAY/state/text()" scope="default" type="STRING"/>
+                <property name="INTERNAL_TRANSACTION_ID" expression="//RESULT_ARRAY/internal_transaction_id/text()" scope="default" type="STRING"/>
+                <property name="OPERATOR_TRANSACTION_ID" expression="//RESULT_ARRAY/operator_transaction_id/text()" scope="default" type="STRING"/>
+                <property name="CHANNEL" expression="//RESULT_ARRAY/channel/text()"/>
+                <property name="SERVICE_PROVIDER" expression="//RESULT_ARRAY/service_provider/text()" scope="default" type="STRING"/>
+                <property name="TYPE" expression="//RESULT_ARRAY/type/text()" scope="default" type="STRING"/>
+                <property name="COUNTRY" expression="//RESULT_ARRAY/country/text()" scope="default" type="STRING"/>
+                <property name="MNO" expression="//RESULT_ARRAY/mno/text()" scope="default" type="STRING"/>
+                <property name="PAYMENT_STATUS" expression="//RESULT_ARRAY/payment_status/text()" scope="default" type="STRING"/>
+                <property name="ORDER_ID" expression="//RESULT_ARRAY/order_id/text()" scope="default" type="STRING"/>
+                <property name="PUBLISH_STATUS" expression="//RESULT_ARRAY/publish_status/text()" scope="default" type="STRING"/>
+                <property name="ID" expression="//RESULT_ARRAY/id/text()" scope="default" type="STRING"/>
+
+                <log>
+                    <property name="Get Status For Token --> " expression="$ctx:OCM_PAY_TOKEN"/>
+                </log>
+
+                <payloadFactory media-type="json">
+                    <format>
+                        {
+                        "type": "$1",
+                        "county_code": "$2",
+                        "mno_name": "$3",
+                        "status": "$4",
+                        "amount": "$5",
+                        "order_id": "$6",
+                        "currency": "$7",
+                        "reference": "$8",
+                        "date": "$9",
+                        "state": "$10",
+                        "intTransaction-id": "$11",
+                        "extTransaction-id ": "$12",
+                        "channel": "$13",
+                        "service_provider": "$14"
+                        }
+                    </format>
+                    <args>
+                        <arg evaluator="xml" expression="$ctx:TYPE"/>
+                        <arg evaluator="xml" expression="$ctx:COUNTRY"/>
+                        <arg evaluator="xml" expression="$ctx:MNO"/>
+                        <arg evaluator="xml" expression="$ctx:PAYMENT_STATUS"/>
+                        <arg evaluator="xml" expression="$ctx:AMOUNT"/>
+                        <arg evaluator="xml" expression="$ctx:ORDER_ID"/>
+                        <arg evaluator="xml" expression="$ctx:CURRENCY"/>
+                        <arg evaluator="xml" expression="$ctx:REFERENCE"/>
+                        <arg evaluator="xml" expression="$ctx:DATE"/>
+                        <arg evaluator="xml" expression="$ctx:STATE"/>
+                        <arg evaluator="xml" expression="$ctx:INTERNAL_TRANSACTION_ID"/>
+                        <arg evaluator="xml" expression="$ctx:OPERATOR_TRANSACTION_ID"/>
+                        <arg evaluator="xml" expression="$ctx:CHANNEL"/>
+                        <arg evaluator="xml" expression="$ctx:SERVICE_PROVIDER"/>
+                    </args>
+                </payloadFactory>
+
+                <!-- Call revenue publish endpoint-->
+                <property name="Authorization" expression="fn:concat('Bearer ', $ctx:REVENUE_PUBLISH_API_BEARER_TOKEN)"
+                          scope="transport" type="STRING"/>
+                <property name="Content-Type" value="application/json" scope="transport" type="STRING"/>
+                <header name="To" expression="$ctx:REVENUE_PUBLISH_API_URL" scope="default"/>
+                <property action="remove" name="REST_URL_POSTFIX" scope="axis2"/>
+                <property name="HTTP_METHOD" scope="axis2" type="STRING" value="POST"/>
+
+                <call>
+                    <endpoint key="RevenuePublishEndpoint"/>
+                </call>
+
+                <log level="custom">
+                    <property name="DIRECTION" value="RESPONSE-IN"/>
+                    <property name="APP" value="REVENUE-CALL"/>
+                    <property name="TRACE_ID" expression="$ctx:TRANSACTION_ID" scope="default" type="STRING"/>
+                    <property expression="$axis2:HTTP_SC" name="HTTP_STATUS"/>
+                </log>
+
+                <dbreport useTransaction="true">
+                    <connection>
+                        <pool>
+                            <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
+                        </pool>
+                    </connection>
+
+                    <statement>
+                        <sql>
+                            <![CDATA[ DELETE FROM data_publish_request WHERE id = ? ]]></sql>
+                        <parameter expression="$ctx:ID" type="VARCHAR"/>
+                    </statement>
+                </dbreport>
+
+            </sequence>
+        </target>
+    </iterate>
 </sequence>
