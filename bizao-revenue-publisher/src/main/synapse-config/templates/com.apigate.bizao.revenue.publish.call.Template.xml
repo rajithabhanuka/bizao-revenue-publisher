@@ -13,7 +13,7 @@
             <property name="PAYMENT_STATUS" expression="$ctx:PAYMENT_STATUS"/>
         </log>
 
-        <property name="PUBLISH_STATUS" value="Pending"/>
+        <property name="PUBLISH_STATUS" value="0"/>
 
         <!--
         Inserting data to data_publish_request to be processed after 5 minutes
