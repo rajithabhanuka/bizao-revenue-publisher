@@ -1,6 +1,6 @@
-CREATE DATABASE `revenue_publisher_db` ;
+CREATE DATABASE `monitoring_db` ;
 
-CREATE TABLE `revenue_publisher_db`.`data_publish_request` (
+CREATE TABLE `monitoring_db`.`data_publish_request` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` VARCHAR(45) NOT NULL,
   `country` VARCHAR(45) NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE `revenue_publisher_db`.`data_publish_request` (
   `publish_status` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `revenue_publisher_db`.`global_settings` (
+CREATE TABLE `monitoring_db`.`global_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `hub_specific_successful_status` varchar(20) DEFAULT NULL,
   `hub_specific_failed_status` varchar(20) DEFAULT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE `revenue_publisher_db`.`global_settings` (
   `revenue_publish_api_bearer_token` varchar(225) NOT NULL,
   PRIMARY KEY (`id`));
 
-INSERT INTO `revenue_publisher_db`.`global_settings`
+INSERT INTO `monitoring_db`.`global_settings`
 (
 `hub_specific_successful_status`,
 `hub_specific_failed_status`,
@@ -55,4 +55,3 @@ VALUES
 'http://localhost:8281/revenue/publish',
 '2dc6c79c-f970-371f-bf9f-642aa45c7e65'
 );
-

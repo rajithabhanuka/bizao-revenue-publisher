@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <task class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz" name="DataPublisherTask" xmlns="http://ws.apache.org/ns/synapse">
-    <trigger count="1" interval="15"/>
+    <trigger interval="15"/>
+    <property name="message" xmlns:task="http://www.wso2.org/products/wso2commons/tasks">
+        <statusCheck xmlns=""/>
+    </property>
+    <property name="injectTo" value="sequence" xmlns:task="http://www.wso2.org/products/wso2commons/tasks"/>
+    <property name="sequenceName" value="com.apigate.bizao.revenue.publish.scheduled.sequence"
+              xmlns:task="http://www.wso2.org/products/wso2commons/tasks"/>
 </task>

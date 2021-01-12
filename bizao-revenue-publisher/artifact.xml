@@ -2,9 +2,6 @@
     <artifact name="DataPublishAPI" groupId="com.apigate.bizao-revenue-publisher.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/api/DataPublishAPI.xml</file>
     </artifact>
-    <artifact name="RevenuePublisherDelayedTask" groupId="com.apigate.bizao-revenue-publisher.task" version="1.0.0" type="synapse/task" serverRole="EnterpriseServiceBus">
-        <file>src/main/synapse-config/tasks/RevenuePublisherDelayedTask.xml</file>
-    </artifact>
     <artifact name="com.apigate.bizao.revenue.publish.main.sequence" groupId="com.apigate.bizao-revenue-publisher.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/sequences/com.apigate.bizao.revenue.publish.main.sequence.xml</file>
     </artifact>
