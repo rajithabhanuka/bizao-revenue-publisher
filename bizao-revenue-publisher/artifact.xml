@@ -11,4 +11,7 @@
     <artifact name="RevenuePublishEndpoint" groupId="com.apigate.bizao-revenue-publisher.endpoint" version="1.0.0" type="synapse/endpoint" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/endpoints/RevenuePublishEndpoint.xml</file>
     </artifact>
+    <artifact name="DataPublisherTask" groupId="com.apigate.bizao-revenue-publisher.task" version="1.0.0" type="synapse/task" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/tasks/DataPublisherTask.xml</file>
+    </artifact>
 </artifacts>
