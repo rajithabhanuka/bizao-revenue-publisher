@@ -13,18 +13,27 @@
             </pool>
         </connection>
         <statement>
-            <sql><![CDATA[ SELECT  fr.amount, fr.currency_code, fr.reference,
-                        fr.transaction_timestamp, fr.state, fr.id, fr.operator_transaction_id, pt.channel, fr.service_provider
-                        FROM  data_publish_request fr  ]]></sql>
+            <sql><![CDATA[ SELECT dpr.amount, dpr.currency, dpr.reference,
+                        dpr.date, dpr.state, dpr.internal_transaction_id,
+                        dpr.operator_transaction_id, dpr.channel, dpr.service_provider,
+                        dpr.type, dpr.country, dpr.mno,
+                        dpr.payment_status, dpr.order_id, dpr.publish_status
+                        FROM  data_publish_request dpr  ]]></sql>
             <result column="amount" name="AMOUNT"/>
-            <result column="currency_code" name="CURRENCY"/>
+            <result column="currency" name="CURRENCY"/>
             <result column="reference" name="REFERENCE"/>
-            <result column="transaction_timestamp" name="DATE"/>
+            <result column="date" name="DATE"/>
             <result column="state" name="STATE"/>
-            <result column="id" name="INTERNAL_TRANSACTION_ID"/>
+            <result column="internal_transaction_id" name="INTERNAL_TRANSACTION_ID"/>
             <result column="operator_transaction_id" name="OPERATOR_TRANSACTION_ID"/>
             <result column="channel" name="CHANNEL"/>
-            <result column="hub_service_provider_id" name="SERVICE_PROVIDER"/>
+            <result column="service_provider" name="SERVICE_PROVIDER"/>
+            <result column="type" name="TYPE"/>
+            <result column="country" name="COUNTRY"/>
+            <result column="mno" name="MNO"/>
+            <result column="payment_status" name="PAYMENT_STATUS"/>
+            <result column="order_id" name="ORDER_ID"/>
+            <result column="publish_status" name="PUBLISH_STATUS"/>
         </statement>
     </dblookup>
 

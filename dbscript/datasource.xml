@@ -6,7 +6,7 @@
     </jndiConfig>
     <definition type="RDBMS">
         <configuration>
-            <url>jdbc:mysql://localhost:3306/revenue_publisher_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
+            <url>jdbc:mysql://localhost:3306/monitoring_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
             <username>root</username>
             <password>root</password>
             <driverClassName>com.mysql.jdbc.Driver</driverClassName>
