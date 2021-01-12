@@ -6,6 +6,23 @@
         <property name="Inside" value="--------revenue-publish-scheduled-sequence---------"/>
     </log>
 
+    <!--Get revenue publish URL-->
+    <dblookup>
+        <connection>
+            <pool>
+                <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
+            </pool>
+        </connection>
+        <statement>
+            <sql>
+                <![CDATA[ SELECT revenue_publish_api_url, revenue_publish_api_bearer_token, batch_size, delay_interval FROM global_settings WHERE id = 1 ]]></sql>
+            <result column="revenue_publish_api_url" name="REVENUE_PUBLISH_API_URL"/>
+            <result column="revenue_publish_api_bearer_token" name="REVENUE_PUBLISH_API_BEARER_TOKEN"/>
+            <result column="batch_size" name="BATCH_SIZE"/>
+            <result column="delay_interval" name="DELAY_INTERVAL"/>
+        </statement>
+    </dblookup>
+
     <dblookup>
         <connection>
             <pool>
@@ -18,7 +35,9 @@
                         dpr.operator_transaction_id, dpr.channel, dpr.service_provider,
                         dpr.type, dpr.country, dpr.mno,
                         dpr.payment_status, dpr.order_id, dpr.publish_status
-                        FROM  data_publish_request dpr  ]]></sql>
+                        FROM  data_publish_request dpr
+                        WHERE scheduled_time <= DATE_SUB(NOW(), INTERVAL 5 MINUTE)
+                        AND publish_status = 0 ]]></sql>
             <result column="amount" name="AMOUNT"/>
             <result column="currency" name="CURRENCY"/>
             <result column="reference" name="REFERENCE"/>
@@ -73,21 +92,6 @@
             <arg evaluator="xml" expression="$ctx:SERVICE_PROVIDER"/>
         </args>
     </payloadFactory>
-
-    <!--Get revenue publish URL-->
-    <dblookup>
-        <connection>
-            <pool>
-                <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
-            </pool>
-        </connection>
-        <statement>
-            <sql>
-                <![CDATA[ SELECT revenue_publish_api_url,revenue_publish_api_bearer_token FROM global_settings WHERE id = 1 ]]></sql>
-            <result column="revenue_publish_api_url" name="REVENUE_PUBLISH_API_URL"/>
-            <result column="revenue_publish_api_bearer_token" name="REVENUE_PUBLISH_API_BEARER_TOKEN"/>
-        </statement>
-    </dblookup>
 
     <!-- Call revenue publish endpoint-->
     <property name="Authorization" expression="fn:concat('Bearer ', $ctx:REVENUE_PUBLISH_API_BEARER_TOKEN)"

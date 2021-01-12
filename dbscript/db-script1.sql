@@ -16,42 +16,28 @@ CREATE TABLE `monitoring_db`.`data_publish_request` (
   `operator_transaction_id` VARCHAR(100) NOT NULL,
   `channel` VARCHAR(45) NOT NULL,
   `service_provider` VARCHAR(45) NOT NULL,
-  `publish_status` VARCHAR(45) NOT NULL,
+  `publish_status` TINYINT(1) NOT NULL DEFAULT 0,
+  `scheduled_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
 CREATE TABLE `monitoring_db`.`global_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `hub_specific_successful_status` varchar(20) DEFAULT NULL,
-  `hub_specific_failed_status` varchar(20) DEFAULT NULL,
-  `hub_specific_pending_status` varchar(20) DEFAULT NULL,
-  `hub_specific_created_status` varchar(20) DEFAULT NULL,
-  `hub_specific_refund_status` varchar(20) DEFAULT NULL,
-  `payment_init_url` varchar(225) DEFAULT NULL,
-  `payment_resource_location` varchar(225) DEFAULT NULL,
   `revenue_publish_api_url` varchar(225) NOT NULL,
   `revenue_publish_api_bearer_token` varchar(225) NOT NULL,
+  `batch_size` int(3) DEFAULT NULL,
+  `delay_interval` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`));
 
 INSERT INTO `monitoring_db`.`global_settings`
 (
-`hub_specific_successful_status`,
-`hub_specific_failed_status`,
-`hub_specific_pending_status`,
-`hub_specific_created_status`,
-`hub_specific_refund_status`,
-`payment_init_url`,
-`payment_resource_location`,
 `revenue_publish_api_url`,
-`revenue_publish_api_bearer_token`)
+`revenue_publish_api_bearer_token`,
+`batch_size`,
+`delay_interval`)
 VALUES
 (
-'Successful',
-'Failed',
-'InProgress',
-'Created',
-'Refunded',
-'http://localhost:9090/mm-payment/proceed',
-'https://storage.googleapis.com/mm-payment/logos/',
 'http://localhost:8281/revenue/publish',
-'2dc6c79c-f970-371f-bf9f-642aa45c7e65'
+'2dc6c79c-f970-371f-bf9f-642aa45c7e65',
+'5',
+'5'
 );
