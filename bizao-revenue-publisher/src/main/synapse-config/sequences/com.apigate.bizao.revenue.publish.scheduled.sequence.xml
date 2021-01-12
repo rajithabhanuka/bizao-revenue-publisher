@@ -23,6 +23,7 @@
                            xmlns:axis2ns3="http://ws.apache.org/ns/synapse"/>
     </class>
 
+    <!--Get Saved data to send to publisher-->
     <property name="sql_1" scope="default" type="STRING" value="SELECT
                         amount, currency, reference,
                         date, state, internal_transaction_id,
