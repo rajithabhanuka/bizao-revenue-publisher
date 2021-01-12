@@ -7,7 +7,6 @@
     </log>
 
     <!--Get revenue publish URL-->
-
     <class name="com.apigate.bizao.mobilemoneyapi.CacheableJDBCLookupMediator">
         <axis2ns1:property
                 name="sqlQuery"
