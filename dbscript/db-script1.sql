@@ -20,7 +20,7 @@ CREATE TABLE `monitoring_db`.`data_publish_request` (
   `scheduled_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `monitoring_db`.`revenue _publish_settings` (
+CREATE TABLE `monitoring_db`.`revenue_publish_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `revenue_publish_api_url` varchar(225) NOT NULL,
   `revenue_publish_api_bearer_token` varchar(225) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE `monitoring_db`.`revenue _publish_settings` (
   `delay_interval` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`));
 
-INSERT INTO `monitoring_db`.`revenue _publish_settings`
+INSERT INTO `monitoring_db`.`revenue_publish_settings`
 (
 `revenue_publish_api_url`,
 `revenue_publish_api_bearer_token`,
@@ -36,8 +36,8 @@ INSERT INTO `monitoring_db`.`revenue _publish_settings`
 `delay_interval`)
 VALUES
 (
-'http://localhost:8281/revenue/publish',
-'2dc6c79c-f970-371f-bf9f-642aa45c7e65',
-'5',
+'https://pre-gateway.bizao.com/revenue/publish/v1',
+'2bf81167-aaee-3cd7-84b3-83d23bc0e224',
+'500',
 '5'
 );
