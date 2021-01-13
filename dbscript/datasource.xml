@@ -1,0 +1,20 @@
+<datasource>
+    <name>BIZAO_MONITORING_DB</name>
+    <description>The datasource used for revenue publisher related information</description>
+    <jndiConfig>
+        <name>jdbc/BIZAO_MONITORING_DB</name>
+    </jndiConfig>
+    <definition type="RDBMS">
+        <configuration>
+            <url>jdbc:mysql://localhost:3306/monitoring_db?autoReconnect=true&amp;relaxAutoCommit=true</url>
+            <username>root</username>
+            <password>root</password>
+            <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+            <maxActive>50</maxActive>
+            <maxWait>60000</maxWait>
+            <testOnBorrow>true</testOnBorrow>
+            <validationQuery>SELECT 1</validationQuery>
+            <validationInterval>30000</validationInterval>
+        </configuration>
+    </definition>
+</datasource>
