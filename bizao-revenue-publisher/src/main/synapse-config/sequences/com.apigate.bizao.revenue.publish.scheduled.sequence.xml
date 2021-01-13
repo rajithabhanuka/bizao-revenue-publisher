@@ -34,7 +34,7 @@
                         WHERE publish_status = 0 AND
                         scheduled_time &lt;= DATE_SUB(NOW(), INTERVAL
                         "/>
-    <property name="sql_2" scope="default" type="STRING" value=" 5"/>
+    <property name="sql_2" scope="default" type="STRING" expression="$ctx:DELAY_INTERVAL"/>
     <property name="sql_3" scope="default" type="STRING" value=" MINUTE)"/>
 
     <property name="SELECT_QUERY"
