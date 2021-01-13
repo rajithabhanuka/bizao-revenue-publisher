@@ -36,9 +36,10 @@
                         "/>
     <property name="sql_2" scope="default" type="STRING" expression="$ctx:DELAY_INTERVAL"/>
     <property name="sql_3" scope="default" type="STRING" value=" MINUTE)"/>
+    <property name="sql_4" scope="default" type="STRING" value=" LIMIT "/>
 
     <property name="SELECT_QUERY"
-              expression="fn:concat($ctx:sql_1, $ctx:sql_2 , $ctx:sql_3)"
+              expression="fn:concat($ctx:sql_1, $ctx:sql_2 , $ctx:sql_3, $ctx:sql_4, $ctx:BATCH_SIZE)"
               scope="default" type="STRING"/>
 
     <class name="com.apigate.bizao.mobilemoneyapi.MultipleRowJDBCLookupMediator">
