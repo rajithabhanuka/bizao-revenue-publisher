@@ -49,7 +49,7 @@
     </class>
 
     <log level="custom">
-        <property name="SELECT_QUERY" expression="$ctx:SELECT_QUERY"/>
+<!--        <property name="SELECT_QUERY" expression="$ctx:SELECT_QUERY"/>-->
         <property name="REVENUE_PUBLISHER_RESULT_COUNT" expression="count(//RESULT_ARRAY)"/>
     </log>
 
