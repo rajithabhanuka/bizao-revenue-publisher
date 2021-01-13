@@ -20,7 +20,7 @@ CREATE TABLE `monitoring_db`.`data_publish_request` (
   `scheduled_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `monitoring_db`.`global_settings` (
+CREATE TABLE `monitoring_db`.`revenue _publish_settings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `revenue_publish_api_url` varchar(225) NOT NULL,
   `revenue_publish_api_bearer_token` varchar(225) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE `monitoring_db`.`global_settings` (
   `delay_interval` int(3) DEFAULT NULL,
   PRIMARY KEY (`id`));
 
-INSERT INTO `monitoring_db`.`global_settings`
+INSERT INTO `monitoring_db`.`revenue _publish_settings`
 (
 `revenue_publish_api_url`,
 `revenue_publish_api_bearer_token`,

@@ -15,7 +15,7 @@
                 revenue_publish_api_bearer_token:REVENUE_PUBLISH_API_BEARER_TOKEN,
                 batch_size:BATCH_SIZE,
                 delay_interval:DELAY_INTERVAL
-                FROM global_settings
+                FROM revenue _publish_settings
                 WHERE id = 1 "
                 xmlns:axis2ns1="http://ws.apache.org/ns/synapse"/>
         <axis2ns2:property name="cacheExpiresIn" value="360m" xmlns:axis2ns2="http://ws.apache.org/ns/synapse"/>
