@@ -2,8 +2,8 @@
 <sequence name="com.apigate.bizao.revenue.publish.scheduled.sequence" trace="disable"
           xmlns="http://ws.apache.org/ns/synapse">
 
-    <log>
-        <property name="Inside" value="--------revenue-publish-scheduled-sequence---------"/>
+    <log level="INFO">
+        <property name="Inside" value="Starting revenue-publish-scheduled-sequence"/>
     </log>
 
     <!--Get revenue publish URL-->
@@ -19,7 +19,7 @@
                 WHERE id = 1 "
                 xmlns:axis2ns1="http://ws.apache.org/ns/synapse"/>
         <axis2ns2:property name="cacheExpiresIn" value="360m" xmlns:axis2ns2="http://ws.apache.org/ns/synapse"/>
-        <axis2ns3:property name="dataSource" value="jdbc/REVENUE_PUBLISHER_DB"
+        <axis2ns3:property name="dataSource" value="jdbc/BIZAO_MONITORING_DB"
                            xmlns:axis2ns3="http://ws.apache.org/ns/synapse"/>
     </class>
 
@@ -36,19 +36,20 @@
                         "/>
     <property name="sql_2" scope="default" type="STRING" expression="$ctx:DELAY_INTERVAL"/>
     <property name="sql_3" scope="default" type="STRING" value=" MINUTE)"/>
-    <property name="sql_4" scope="default" type="STRING" value=" LIMIT "/>
+    <property name="sql_4" scope="default" type="STRING" value=" ORDER BY scheduled_time ASC"/>
+    <property name="sql_5" scope="default" type="STRING" value=" LIMIT "/>
 
     <property name="SELECT_QUERY"
-              expression="fn:concat($ctx:sql_1, $ctx:sql_2 , $ctx:sql_3, $ctx:sql_4, $ctx:BATCH_SIZE)"
+              expression="fn:concat($ctx:sql_1, $ctx:sql_2 , $ctx:sql_3, $ctx:sql_4, $ctx:sql_5, $ctx:BATCH_SIZE)"
               scope="default" type="STRING"/>
 
     <class name="com.apigate.bizao.mobilemoneyapi.MultipleRowJDBCLookupMediator">
-        <axis2ns2:property name="dataSource" value="jdbc/REVENUE_PUBLISHER_DB"
+        <axis2ns2:property name="dataSource" value="jdbc/BIZAO_MONITORING_DB"
                            xmlns:axis2ns2="http://ws.apache.org/ns/synapse"/>
     </class>
 
     <log level="custom">
-<!--        <property name="SELECT_QUERY" expression="$ctx:SELECT_QUERY"/>-->
+        <property name="SELECT_QUERY" expression="$ctx:SELECT_QUERY"/>
         <property name="REVENUE_PUBLISHER_RESULT_COUNT" expression="count(//RESULT_ARRAY)"/>
     </log>
 
@@ -61,16 +62,21 @@
                 <property name="REFERENCE" expression="//RESULT_ARRAY/reference/text()" scope="default" type="STRING"/>
                 <property name="DATE" expression="//RESULT_ARRAY/date/text()" scope="default" type="STRING"/>
                 <property name="STATE" expression="//RESULT_ARRAY/state/text()" scope="default" type="STRING"/>
-                <property name="INTERNAL_TRANSACTION_ID" expression="//RESULT_ARRAY/internal_transaction_id/text()" scope="default" type="STRING"/>
-                <property name="OPERATOR_TRANSACTION_ID" expression="//RESULT_ARRAY/operator_transaction_id/text()" scope="default" type="STRING"/>
+                <property name="INTERNAL_TRANSACTION_ID" expression="//RESULT_ARRAY/internal_transaction_id/text()"
+                          scope="default" type="STRING"/>
+                <property name="OPERATOR_TRANSACTION_ID" expression="//RESULT_ARRAY/operator_transaction_id/text()"
+                          scope="default" type="STRING"/>
                 <property name="CHANNEL" expression="//RESULT_ARRAY/channel/text()"/>
-                <property name="SERVICE_PROVIDER" expression="//RESULT_ARRAY/service_provider/text()" scope="default" type="STRING"/>
+                <property name="SERVICE_PROVIDER" expression="//RESULT_ARRAY/service_provider/text()" scope="default"
+                          type="STRING"/>
                 <property name="TYPE" expression="//RESULT_ARRAY/type/text()" scope="default" type="STRING"/>
                 <property name="COUNTRY" expression="//RESULT_ARRAY/country/text()" scope="default" type="STRING"/>
                 <property name="MNO" expression="//RESULT_ARRAY/mno/text()" scope="default" type="STRING"/>
-                <property name="PAYMENT_STATUS" expression="//RESULT_ARRAY/payment_status/text()" scope="default" type="STRING"/>
+                <property name="PAYMENT_STATUS" expression="//RESULT_ARRAY/payment_status/text()" scope="default"
+                          type="STRING"/>
                 <property name="ORDER_ID" expression="//RESULT_ARRAY/order_id/text()" scope="default" type="STRING"/>
-                <property name="PUBLISH_STATUS" expression="//RESULT_ARRAY/publish_status/text()" scope="default" type="STRING"/>
+                <property name="PUBLISH_STATUS" expression="//RESULT_ARRAY/publish_status/text()" scope="default"
+                          type="STRING"/>
                 <property name="ID" expression="//RESULT_ARRAY/id/text()" scope="default" type="STRING"/>
 
                 <log>
@@ -133,20 +139,24 @@
                     <property expression="$axis2:HTTP_SC" name="HTTP_STATUS"/>
                 </log>
 
-                <dbreport useTransaction="true">
-                    <connection>
-                        <pool>
-                            <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
-                        </pool>
-                    </connection>
+                <!--                if revenue publisher send 200, data will delete otherwise try again in next scheduler-->
+                <filter regex="200|201" source="$axis2:HTTP_SC" xmlns:ns="http://org.apache.synapse/xsd">
+                    <then>
+                        <dbreport useTransaction="true">
+                            <connection>
+                                <pool>
+                                    <dsName>jdbc/BIZAO_MONITORING_DB</dsName>
+                                </pool>
+                            </connection>
 
-                    <statement>
-                        <sql>
-                            <![CDATA[ DELETE FROM data_publish_request WHERE id = ? ]]></sql>
-                        <parameter expression="$ctx:ID" type="VARCHAR"/>
-                    </statement>
-                </dbreport>
-
+                            <statement>
+                                <sql>
+                                    <![CDATA[ DELETE FROM data_publish_request WHERE id = ? ]]></sql>
+                                <parameter expression="$ctx:ID" type="VARCHAR"/>
+                            </statement>
+                        </dbreport>
+                    </then>
+                </filter>
             </sequence>
         </target>
     </iterate>

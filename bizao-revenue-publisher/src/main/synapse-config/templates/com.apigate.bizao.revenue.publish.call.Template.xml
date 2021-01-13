@@ -21,7 +21,7 @@
         <dbreport>
             <connection>
                 <pool>
-                    <dsName>jdbc/REVENUE_PUBLISHER_DB</dsName>
+                    <dsName>jdbc/BIZAO_MONITORING_DB</dsName>
                 </pool>
             </connection>
             <statement>

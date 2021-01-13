@@ -1,8 +1,8 @@
 <datasource>
-    <name>REVENUE_PUBLISHER_DB</name>
+    <name>BIZAO_MONITORING_DB</name>
     <description>The datasource used for revenue publisher related information</description>
     <jndiConfig>
-        <name>jdbc/REVENUE_PUBLISHER_DB</name>
+        <name>jdbc/BIZAO_MONITORING_DB</name>
     </jndiConfig>
     <definition type="RDBMS">
         <configuration>
