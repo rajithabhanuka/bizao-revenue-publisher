@@ -5,6 +5,9 @@
     <artifact name="com.apigate.bizao.revenue.publish.main.sequence" groupId="com.apigate.bizao-revenue-publisher.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/sequences/com.apigate.bizao.revenue.publish.main.sequence.xml</file>
     </artifact>
+    <artifact name="com.apigate.bizao.revenue.publish.scheduled.sequence" groupId="com.apigate.bizao-revenue-publisher.sequence" version="1.0.0" type="synapse/sequence" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/sequences/com.apigate.bizao.revenue.publish.scheduled.sequence.xml</file>
+    </artifact>
     <artifact name="com.apigate.bizao.revenue.publish.call.Template" groupId="com.apigate.bizao-revenue-publisher.template" version="1.0.0" type="synapse/sequenceTemplate" serverRole="EnterpriseServiceBus">
         <file>src/main/synapse-config/templates/com.apigate.bizao.revenue.publish.call.Template.xml</file>
     </artifact>
